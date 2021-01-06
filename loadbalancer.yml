@@ -1,0 +1,38 @@
+- hosts: server
+  tasks:
+   - name: "installing httpd software"
+     package:
+      name: "httpd"
+      state: present
+
+   - name: "installing php software"
+     package:
+       name: "php"
+       state: present
+
+   - name: "copying the web pages"
+     copy:
+      src: "index.php"
+      dest: "/var/www/html/index.php"
+
+   - name: "starting httpd servive"
+     service:
+      name: "httpd"
+      state: restarted
+
+- hosts: lb
+  tasks: 
+   - name: "installing haproxy"
+     package:
+      name: haproxy
+      state: present
+
+   - name: "copying configuration file"
+     template:
+      src: "haproxy.cfg.j2"
+      dest: "/etc/haproxy/haproxy.cfg"
+
+   - name: "start service of haproxy"
+     service:
+      name: "haproxy"
+      state: started
